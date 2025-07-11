@@ -26,7 +26,7 @@ router.post('/login',async(req,res)=>{
         if(user.password === req.body.password){
             return res
                 .status(200)
-                .send({message:`Welcome ${user.username}`})
+                .json({message:`Welcome ${user.username}`,user})
         }
         return res.send({message:"Invalid credential"})
 

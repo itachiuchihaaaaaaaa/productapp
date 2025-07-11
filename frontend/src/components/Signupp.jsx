@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Signupp = () => {
-
+    const baseURl = import.meta.env.VITE_API_BASE_URL
+    
     var [inputs,setInputs] = useState({})
     var navigate = useNavigate();
 
@@ -16,7 +17,7 @@ const Signupp = () => {
     
     const addData = ()=>{
         axios
-        .post("http://localhost:3000/api",inputs)
+        .post(`${baseURl}/api`,inputs)
         .then((res)=>{console.log(res);
         alert(res.data.message);
         navigate('/')

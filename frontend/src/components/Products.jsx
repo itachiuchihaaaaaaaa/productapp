@@ -7,11 +7,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 const Products = () => {
+   const baseURl = import.meta.env.VITE_API_BASE_URL
+    var navigate = useNavigate();
     var [products,setProducts] = useState([]);
+    const [role,setRole] = useState(null)
     useEffect(()=>{
+      const savedRole = sessionStorage.getItem("role");
+      setRole(savedRole)
       axios 
-        .get("http://localhost:3000/p")
+        .get(`${baseURl}/p`)
         .then((res)=>{
           console.log(res.data)
           setProducts(res.data)})
@@ -20,7 +26,7 @@ const Products = () => {
 
   const deletecard = (id)=>{
     axios
-    .delete(`http://localhost:3000/p/${id}`)
+    .delete(`${baseURl}/p/${id}`)
     .then((res)=>{
         alert(res.data.message);
         window.location.reload();
@@ -28,6 +34,11 @@ const Products = () => {
     .catch((err)=>{
         console.log(err)
     })
+  }
+  
+  const editPro = (val)=>{
+    console.log(val)
+    navigate('/a',{state:{val}})
   }
 
   return (
@@ -38,7 +49,7 @@ const Products = () => {
             <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image={`http://localhost:3000/uploads/${val.images[0]}`}
+        image={`${baseURl}/uploads/${val.images[0]}`}
         title="green iguana"
       />
       <CardContent>
@@ -55,8 +66,12 @@ const Products = () => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Buy Now</Button>
-        <Button size="small" onClick={()=>{deletecard(val._id)}}>Delete</Button>
+       {role==="admin" &&(
+         <Button size="small" onClick={()=>{editPro(val)}}>Edit</Button>
+       )}
+       {role==="admin"&&(
+         <Button size="small" onClick={()=>{deletecard(val._id)}}>Delete</Button>
+       )}
       </CardActions>
     </Card>
           </Grid>
